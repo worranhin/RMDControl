@@ -1,3 +1,14 @@
+/**
+ * @file RMDControl.c
+ * @author worranhin (worranhin@foxmail.com)
+ * @brief Source file of the RMD motor control library.
+ * @version 0.1
+ * @date 2024-07-26
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
+
 #include "RMDControl.h"
 
 HANDLE hSerial;
@@ -101,13 +112,8 @@ int RMD_GoToAngle(int64_t angle) {
  * @throws None
  */
 int RMD_Stop() {
-  static uint8_t command[] = {0x3E, 0x81, 0x01, 0x00, 0x00};
-  uint8_t checksum = 0;
-  for (int i = 0; i < 4; i++) {
-    checksum += command[i];
-  }
+  static uint8_t command[] = {0x3E, 0x81, 0x01, 0x00, 0xc0};
 
-  command[4] = checksum;
   if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
     printf("Error writing to serial port!\n");
     return -1;

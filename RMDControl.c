@@ -12,12 +12,13 @@
 #include "RMDControl.h"
 
 HANDLE hSerial;
-char buffer[100];
+char WriteBuffer[100];
+// char ReadBuffer[100];
 DWORD bytesRead, bytesWritten;
 
 /**
  * Initializes the RMD serial port for communication.
- * 
+ *
  * @param serialPort The name of the serial port.
  *
  * @return 0 if the serial port is successfully initialized, -1 otherwise
@@ -28,6 +29,24 @@ int RMD_Init(const char* serialPort) {
   hSerial = CreateFile(serialPort, GENERIC_READ | GENERIC_WRITE, 0, 0,
                        OPEN_EXISTING, 0, 0);
   if (hSerial == INVALID_HANDLE_VALUE) {
+    return -1;
+  }
+
+  WINBOOL bSuccess = SetupComm(hSerial, 100, 100);
+  if (!bSuccess) {
+    CloseHandle(hSerial);
+    return -1;
+  }
+
+  COMMTIMEOUTS commTimeouts = {0};
+  commTimeouts.ReadIntervalTimeout = MAXDWORD;
+  commTimeouts.ReadTotalTimeoutConstant = 0;
+  commTimeouts.ReadTotalTimeoutMultiplier = 0;
+  commTimeouts.WriteTotalTimeoutConstant = 1;
+  commTimeouts.WriteTotalTimeoutMultiplier = 1;
+  bSuccess = SetCommTimeouts(hSerial, &commTimeouts);
+  if (!bSuccess) {
+    CloseHandle(hSerial);
     return -1;
   }
 
@@ -58,6 +77,55 @@ int RMD_Init(const char* serialPort) {
  */
 int RMD_DeInit() {
   CloseHandle(hSerial);
+  return 0;
+}
+
+int RMD_GetMultiAngle_S(int64_t* angle) {
+  static const uint8_t command[] = {0x3E, 0x92, 0x01, 0x00, 0xD1};
+  static const DWORD bytesToRead = 14;
+  static uint8_t readBuf[bytesToRead];
+  int64_t motorAngle = 0;
+
+  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
+    return -1;
+  }
+
+  if (!ReadFile(hSerial, readBuf, bytesToRead, &bytesRead, NULL)) {
+    return -1;
+  }
+
+  // check received length
+  if (bytesRead != bytesToRead) {
+    return -1;
+  }
+
+  // check received format
+  if (readBuf[0] != 0x3E || readBuf[1] != 0x92 || readBuf[2] != 0x01 ||
+      readBuf[3] != 0x08 || readBuf[4] != 0xD9) {
+    return -1;
+  }
+
+  // check data sum
+  uint8_t sum = 0;
+  for (int i = 5; i < 13; i++) {
+    sum += ReadBuffer[i];
+  }
+  if(sum != ReadBuffer[13]) {
+    return -1;
+  }
+
+  // motorAngle = ReadBuffer[5] | (ReadBuffer[6] << 8) | (ReadBuffer[7] << 16) |
+  // (ReadBuffer[8] << 24);
+  *(uint8_t*)(&motorAngle) = ReadBuffer[5];
+  *((uint8_t*)(&motorAngle) + 1) = ReadBuffer[6];
+  *((uint8_t*)(&motorAngle) + 2) = ReadBuffer[7];
+  *((uint8_t*)(&motorAngle) + 3) = ReadBuffer[8];
+  *((uint8_t*)(&motorAngle) + 4) = ReadBuffer[9];
+  *((uint8_t*)(&motorAngle) + 5) = ReadBuffer[10];
+  *((uint8_t*)(&motorAngle) + 6) = ReadBuffer[11];
+  *((uint8_t*)(&motorAngle) + 7) = ReadBuffer[12];
+
+  *angle = motorAngle;
   return 0;
 }
 

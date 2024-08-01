@@ -25,6 +25,7 @@ extern "C" {
 
 int RMD_Init(const char* serialPort);
 int RMD_DeInit();
+int RMD_GetMultiAngle_S(int64_t* angle);
 int RMD_GoToAngle(int64_t angle);
 int RMD_Stop();
 

@@ -17,13 +17,13 @@
 #include <stdint.h>
 #include <stdbool.h>
 
-#define SERIAL_PORT "COM7"
+// #define SERIAL_PORT "COM7"
 
 #ifdef __cplusplus
 extern "C" {
 #endif
 
-int RMD_Init();
+int RMD_Init(const char* serialPort);
 int RMD_DeInit();
 int RMD_GoToAngle(int64_t angle);
 int RMD_Stop();

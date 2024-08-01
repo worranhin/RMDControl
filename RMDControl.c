@@ -17,23 +17,23 @@ DWORD bytesRead, bytesWritten;
 
 /**
  * Initializes the RMD serial port for communication.
+ * 
+ * @param serialPort The name of the serial port.
  *
  * @return 0 if the serial port is successfully initialized, -1 otherwise
  *
  * @throws None
  */
-int RMD_Init() {
-  hSerial = CreateFile(SERIAL_PORT, GENERIC_READ | GENERIC_WRITE, 0, 0,
+int RMD_Init(const char* serialPort) {
+  hSerial = CreateFile(serialPort, GENERIC_READ | GENERIC_WRITE, 0, 0,
                        OPEN_EXISTING, 0, 0);
   if (hSerial == INVALID_HANDLE_VALUE) {
-    printf("Error opening serial port!\n");
     return -1;
   }
 
   DCB dcbSerialParams = {0};
   dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
   if (!GetCommState(hSerial, &dcbSerialParams)) {
-    printf("Error getting serial port state!\n");
     CloseHandle(hSerial);
     return -1;
   }
@@ -42,7 +42,6 @@ int RMD_Init() {
   dcbSerialParams.StopBits = ONESTOPBIT;
   dcbSerialParams.Parity = NOPARITY;
   if (!SetCommState(hSerial, &dcbSerialParams)) {
-    printf("Error setting serial port state!\n");
     CloseHandle(hSerial);
     return -1;
   }
@@ -98,7 +97,6 @@ int RMD_GoToAngle(int64_t angle) {
   // }
 
   if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
-    printf("Error writing to serial port!\n");
     return -1;
   }
   return 0;
@@ -115,7 +113,6 @@ int RMD_Stop() {
   static uint8_t command[] = {0x3E, 0x81, 0x01, 0x00, 0xc0};
 
   if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
-    printf("Error writing to serial port!\n");
     return -1;
   }
 

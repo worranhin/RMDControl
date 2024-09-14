@@ -13,7 +13,7 @@
 
 HANDLE hSerial;
 char WriteBuffer[100];
-// char ReadBuffer[100];
+char ReadBuffer[100];
 DWORD bytesRead, bytesWritten;
 
 /**

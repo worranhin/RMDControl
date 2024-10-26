@@ -6,11 +6,18 @@ int main() {
   bool isReadingNum = false;
   int numSign = 1;
 
-  RMD_Init();
+  RMD_Init("COM7");
 
-  printf("输入一个角度以前往(单位: 0.01度)\n");
-  printf("输入 \'s\' 停止电机\n");
-  printf("按 \'q\' 退出\n");
+  int64_t angle;
+  if (RMD_GetMultiAngle_S(&angle) == 0) {
+    printf("Curent multi angle: %lld\n", angle);
+  } else {
+    printf("RMD_GetMultiAngle_S error\n");
+  }
+
+  printf("Enter an angle to go to(unit: 0.01 degree)\n");
+  printf("Enter \'s\' to stop.\n");
+  printf("Enter \'q\' to quit.\n");
 
   while (1) {
     key = getchar();

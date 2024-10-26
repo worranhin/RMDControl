@@ -12,8 +12,6 @@
 #include "RMDControl.h"
 
 HANDLE hSerial;
-char WriteBuffer[100];
-char ReadBuffer[100];
 DWORD bytesRead, bytesWritten;
 
 /**
@@ -108,22 +106,22 @@ int RMD_GetMultiAngle_S(int64_t* angle) {
   // check data sum
   uint8_t sum = 0;
   for (int i = 5; i < 13; i++) {
-    sum += ReadBuffer[i];
+    sum += readBuf[i];
   }
-  if(sum != ReadBuffer[13]) {
+  if(sum != readBuf[13]) {
     return -1;
   }
 
   // motorAngle = ReadBuffer[5] | (ReadBuffer[6] << 8) | (ReadBuffer[7] << 16) |
   // (ReadBuffer[8] << 24);
-  *(uint8_t*)(&motorAngle) = ReadBuffer[5];
-  *((uint8_t*)(&motorAngle) + 1) = ReadBuffer[6];
-  *((uint8_t*)(&motorAngle) + 2) = ReadBuffer[7];
-  *((uint8_t*)(&motorAngle) + 3) = ReadBuffer[8];
-  *((uint8_t*)(&motorAngle) + 4) = ReadBuffer[9];
-  *((uint8_t*)(&motorAngle) + 5) = ReadBuffer[10];
-  *((uint8_t*)(&motorAngle) + 6) = ReadBuffer[11];
-  *((uint8_t*)(&motorAngle) + 7) = ReadBuffer[12];
+  *(uint8_t*)(&motorAngle) = readBuf[5];
+  *((uint8_t*)(&motorAngle) + 1) = readBuf[6];
+  *((uint8_t*)(&motorAngle) + 2) = readBuf[7];
+  *((uint8_t*)(&motorAngle) + 3) = readBuf[8];
+  *((uint8_t*)(&motorAngle) + 4) = readBuf[9];
+  *((uint8_t*)(&motorAngle) + 5) = readBuf[10];
+  *((uint8_t*)(&motorAngle) + 6) = readBuf[11];
+  *((uint8_t*)(&motorAngle) + 7) = readBuf[12];
 
   *angle = motorAngle;
   return 0;

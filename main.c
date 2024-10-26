@@ -23,7 +23,7 @@ int main() {
     key = getchar();
 
     if (isReadingNum && !isdigit(key)) {
-      RMD_GoToAngle(num);
+      RMD_GoAngleAbsolute(num);
     }
 
     if (key == 'q') {
@@ -53,7 +53,7 @@ int main() {
         printf("输入角度超出范围\n");
         continue;
       } else {
-        RMD_GoToAngle(num);
+        RMD_GoAngleAbsolute(num);
         num = 0;
         numSign = 1;
       }

@@ -1,19 +1,37 @@
 #include "RMDControl.h"
 
-int main() {
-  char key = 0;
-  int num = 0;
-  bool isReadingNum = false;
-  int numSign = 1;
+void TestGoAngle();
+void TestGetAngle();
+void TestGetPI();
 
+int main() {
   RMD_Init("COM7");
 
+  TestGetAngle();
+  TestGetPI();
+  RMD_GoAngleRelative(1000);
+  Sleep(1000);
+  RMD_GoAngleRelative(-1000);
+  Sleep(1000);
+
+  RMD_DeInit();
+  return 0;
+}
+
+void TestGetAngle() {
   int64_t angle;
   if (RMD_GetMultiAngle_S(&angle) == 0) {
     printf("Curent multi angle: %lld\n", angle);
   } else {
     printf("RMD_GetMultiAngle_S error\n");
   }
+}
+
+void TestGoAngle() {
+  char key = 0;
+  int num = 0;
+  bool isReadingNum = false;
+  int numSign = 1;
 
   printf("Enter an angle to go to(unit: 0.01 degree)\n");
   printf("Enter \'s\' to stop.\n");
@@ -66,7 +84,13 @@ int main() {
 
     // GoToAngle(num);
   }
+}
 
-  RMD_DeInit();
-  return 0;
+void TestGetPI() {
+  uint8_t arrPI[6];
+  if (RMD_GetPI(arrPI) == 0) {
+    printf("Curent PI: %d, %d, %d, %d, %d, %d\n", arrPI[0], arrPI[1], arrPI[2], arrPI[3], arrPI[4], arrPI[5]);
+  } else {
+    printf("RMD_GetPI error\n");
+  }
 }

@@ -1,0 +1,365 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "https://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml" lang="zh">
+<head>
+<meta http-equiv="Content-Type" content="text/xhtml;charset=UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=11"/>
+<meta name="generator" content="Doxygen 1.12.0"/>
+<meta name="viewport" content="width=device-width, initial-scale=1"/>
+<title>RMD Control Driver: RMDControl.c 文件参考</title>
+<link href="tabs.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="jquery.js"></script>
+<script type="text/javascript" src="dynsections.js"></script>
+<script type="text/javascript" src="clipboard.js"></script>
+<link href="navtree.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="resize.js"></script>
+<script type="text/javascript" src="cookie.js"></script>
+<link href="search/search.css" rel="stylesheet" type="text/css"/>
+<script type="text/javascript" src="search/searchdata.js"></script>
+<script type="text/javascript" src="search/search.js"></script>
+<link href="doxygen.css" rel="stylesheet" type="text/css" />
+</head>
+<body>
+<div id="top"><!-- do not remove this div, it is closed by doxygen! -->
+<div id="titlearea">
+<table cellspacing="0" cellpadding="0">
+ <tbody>
+ <tr id="projectrow">
+  <td id="projectalign">
+   <div id="projectname">RMD Control Driver
+   </div>
+  </td>
+ </tr>
+ </tbody>
+</table>
+</div>
+<!-- end header part -->
+<!-- 制作者 Doxygen 1.12.0 -->
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+var searchBox = new SearchBox("searchBox", "search/",'.html');
+/* @license-end */
+</script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() { codefold.init(0); });
+/* @license-end */
+</script>
+<script type="text/javascript" src="menudata.js"></script>
+<script type="text/javascript" src="menu.js"></script>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function() {
+  initMenu('',true,false,'search.php','搜索',false);
+  $(function() { init_search(); });
+});
+/* @license-end */
+</script>
+<div id="main-nav"></div>
+<script type="text/javascript">
+/* @license magnet:?xt=urn:btih:d3d9a9a6595521f9666a5e94cc830dab83b65699&amp;dn=expat.txt MIT */
+$(function(){ initResizable(false); });
+/* @license-end */
+</script>
+<!-- window showing the filter options -->
+<div id="MSearchSelectWindow"
+     onmouseover="return searchBox.OnSearchSelectShow()"
+     onmouseout="return searchBox.OnSearchSelectHide()"
+     onkeydown="return searchBox.OnSearchSelectKey(event)">
+</div>
+
+<!-- iframe showing the search results (closed by default) -->
+<div id="MSearchResultsWindow">
+<div id="MSearchResults">
+<div class="SRPage">
+<div id="SRIndex">
+<div id="SRResults"></div>
+<div class="SRStatus" id="Loading">载入中...</div>
+<div class="SRStatus" id="Searching">搜索中...</div>
+<div class="SRStatus" id="NoMatches">未找到</div>
+</div>
+</div>
+</div>
+</div>
+
+</div><!-- top -->
+<div id="doc-content">
+<div class="header">
+  <div class="summary">
+<a href="#func-members">函数</a> &#124;
+<a href="#var-members">变量</a>  </div>
+  <div class="headertitle"><div class="title">RMDControl.c 文件参考</div></div>
+</div><!--header-->
+<div class="contents">
+
+<p>Source file of the RMD motor control library.  
+<a href="#details">更多...</a></p>
+<div class="textblock"><code>#include &quot;<a class="el" href="_r_m_d_control_8h_source.html">RMDControl.h</a>&quot;</code><br />
+</div><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="func-members" name="func-members"></a>
+函数</h2></td></tr>
+<tr class="memitem:a2d12f2bf517f8c2958c549fcfa51e25f" id="r_a2d12f2bf517f8c2958c549fcfa51e25f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a2d12f2bf517f8c2958c549fcfa51e25f">RMD_Init</a> (const char *serialPort)</td></tr>
+<tr class="separator:a2d12f2bf517f8c2958c549fcfa51e25f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:abb9aa3a77863ca9ee0952acdd0f021a6" id="r_abb9aa3a77863ca9ee0952acdd0f021a6"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#abb9aa3a77863ca9ee0952acdd0f021a6">RMD_DeInit</a> ()</td></tr>
+<tr class="separator:abb9aa3a77863ca9ee0952acdd0f021a6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a80a4e67af9db7c4bd85126caec99488f" id="r_a80a4e67af9db7c4bd85126caec99488f"><td class="memItemLeft" align="right" valign="top"><a id="a80a4e67af9db7c4bd85126caec99488f" name="a80a4e67af9db7c4bd85126caec99488f"></a>
+int&#160;</td><td class="memItemRight" valign="bottom"><b>RMD_GetMultiAngle_S</b> (int64_t *angle)</td></tr>
+<tr class="separator:a80a4e67af9db7c4bd85126caec99488f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a83f77b75335c41e1903c763bfee3e23e" id="r_a83f77b75335c41e1903c763bfee3e23e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a83f77b75335c41e1903c763bfee3e23e">RMD_GoAngleAbsolute</a> (int64_t angle)</td></tr>
+<tr class="separator:a83f77b75335c41e1903c763bfee3e23e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d4467b0f78ae2d42ceb355a4ab2237f" id="r_a1d4467b0f78ae2d42ceb355a4ab2237f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d4467b0f78ae2d42ceb355a4ab2237f">RMD_GoAngleRelative</a> (int32_t angle)</td></tr>
+<tr class="separator:a1d4467b0f78ae2d42ceb355a4ab2237f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a62b2891d3c3c8edd00795c265780779f" id="r_a62b2891d3c3c8edd00795c265780779f"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a62b2891d3c3c8edd00795c265780779f">RMD_Stop</a> ()</td></tr>
+<tr class="separator:a62b2891d3c3c8edd00795c265780779f"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8ed3d127c87a152396c28583490a7e2e" id="r_a8ed3d127c87a152396c28583490a7e2e"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a8ed3d127c87a152396c28583490a7e2e">RMD_GetPI</a> (uint8_t *arrPI)</td></tr>
+<tr class="separator:a8ed3d127c87a152396c28583490a7e2e"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a1d6c112734ebc57dc0a6b693b893885d" id="r_a1d6c112734ebc57dc0a6b693b893885d"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a1d6c112734ebc57dc0a6b693b893885d">RMD_WriteAnglePI_RAM</a> (const uint8_t *arrPI)</td></tr>
+<tr class="separator:a1d6c112734ebc57dc0a6b693b893885d"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a974ca1472e1bd7ae58e320725ef1d478" id="r_a974ca1472e1bd7ae58e320725ef1d478"><td class="memItemLeft" align="right" valign="top">int&#160;</td><td class="memItemRight" valign="bottom"><a class="el" href="#a974ca1472e1bd7ae58e320725ef1d478">RMD_WriteAnglePI_ROM</a> (const uint8_t *arrPI)</td></tr>
+<tr class="separator:a974ca1472e1bd7ae58e320725ef1d478"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table><table class="memberdecls">
+<tr class="heading"><td colspan="2"><h2 class="groupheader"><a id="var-members" name="var-members"></a>
+变量</h2></td></tr>
+<tr class="memitem:a23f559a9cd1d7e4648193a22a69a8f75" id="r_a23f559a9cd1d7e4648193a22a69a8f75"><td class="memItemLeft" align="right" valign="top"><a id="a23f559a9cd1d7e4648193a22a69a8f75" name="a23f559a9cd1d7e4648193a22a69a8f75"></a>
+HANDLE&#160;</td><td class="memItemRight" valign="bottom"><b>hSerial</b></td></tr>
+<tr class="separator:a23f559a9cd1d7e4648193a22a69a8f75"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a46f0d21e79a355956401258356a38cf6" id="r_a46f0d21e79a355956401258356a38cf6"><td class="memItemLeft" align="right" valign="top"><a id="a46f0d21e79a355956401258356a38cf6" name="a46f0d21e79a355956401258356a38cf6"></a>
+DWORD&#160;</td><td class="memItemRight" valign="bottom"><b>bytesRead</b></td></tr>
+<tr class="separator:a46f0d21e79a355956401258356a38cf6"><td class="memSeparator" colspan="2">&#160;</td></tr>
+<tr class="memitem:a8337c1ea7e3e1dc365680f1c69dc73a9" id="r_a8337c1ea7e3e1dc365680f1c69dc73a9"><td class="memItemLeft" align="right" valign="top"><a id="a8337c1ea7e3e1dc365680f1c69dc73a9" name="a8337c1ea7e3e1dc365680f1c69dc73a9"></a>
+DWORD&#160;</td><td class="memItemRight" valign="bottom"><b>bytesWritten</b></td></tr>
+<tr class="separator:a8337c1ea7e3e1dc365680f1c69dc73a9"><td class="memSeparator" colspan="2">&#160;</td></tr>
+</table>
+<a name="details" id="details"></a><h2 class="groupheader">详细描述</h2>
+<div class="textblock"><p>Source file of the RMD motor control library. </p>
+<dl class="section author"><dt>作者</dt><dd>worranhin (<a href="#" onclick="location.href='mai'+'lto:'+'wor'+'ra'+'nhi'+'n@'+'fox'+'ma'+'il.'+'co'+'m'; return false;">worra<span class="obfuscator">.nosp@m.</span>nhin<span class="obfuscator">.nosp@m.</span>@foxm<span class="obfuscator">.nosp@m.</span>ail.<span class="obfuscator">.nosp@m.</span>com</a>) </dd></dl>
+<dl class="section version"><dt>版本</dt><dd>0.1 </dd></dl>
+<dl class="section date"><dt>日期</dt><dd>2024-07-26</dd></dl>
+<dl class="section copyright"><dt>版权所有</dt><dd>Copyright (c) 2024 </dd></dl>
+</div><h2 class="groupheader">函数说明</h2>
+<a id="abb9aa3a77863ca9ee0952acdd0f021a6" name="abb9aa3a77863ca9ee0952acdd0f021a6"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#abb9aa3a77863ca9ee0952acdd0f021a6">&#9670;&#160;</a></span>RMD_DeInit()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RMD_DeInit </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Deinitializes the RMD serial port by closing the handle to the serial port.</p>
+<dl class="section return"><dt>返回</dt><dd>0 if the serial port handle is successfully closed, -1 otherwise</dd></dl>
+<dl class="exception"><dt>异常</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">None</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a8ed3d127c87a152396c28583490a7e2e" name="a8ed3d127c87a152396c28583490a7e2e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a8ed3d127c87a152396c28583490a7e2e">&#9670;&#160;</a></span>RMD_GetPI()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RMD_GetPI </td>
+          <td>(</td>
+          <td class="paramtype">uint8_t *</td>          <td class="paramname"><span class="paramname"><em>arrPI</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sends a command to get motor's PI parameters</p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arrPI</td><td>a array to obtain motor's PI, [angleKp, angleKi, speedKp, speedKi, torqueKp, torqueKi] </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>0 if the command was successfully sent, -1 otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a83f77b75335c41e1903c763bfee3e23e" name="a83f77b75335c41e1903c763bfee3e23e"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a83f77b75335c41e1903c763bfee3e23e">&#9670;&#160;</a></span>RMD_GoAngleAbsolute()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RMD_GoAngleAbsolute </td>
+          <td>(</td>
+          <td class="paramtype">int64_t</td>          <td class="paramname"><span class="paramname"><em>angle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sends a command to a serial port to move a motor to a specified angle.</p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">angle</td><td>the desired angle to move the motor to, in 0.01 degrees</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>0 if the command was successfully sent, -1 otherwise</dd></dl>
+<dl class="exception"><dt>异常</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">None</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1d4467b0f78ae2d42ceb355a4ab2237f" name="a1d4467b0f78ae2d42ceb355a4ab2237f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d4467b0f78ae2d42ceb355a4ab2237f">&#9670;&#160;</a></span>RMD_GoAngleRelative()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RMD_GoAngleRelative </td>
+          <td>(</td>
+          <td class="paramtype">int32_t</td>          <td class="paramname"><span class="paramname"><em>angle</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Move the motor by a relative angle.</p>
+<p>The function constructs a command packet to instruct the motor to move by the specified relative angle. The command is sent over an initialized serial communication channel.</p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">angle</td><td>The relative angle to move the motor, in 0.01 degrees.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>0 if the command was successfully sent, -1 otherwise.</dd></dl>
+<dl class="exception"><dt>异常</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">None.</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a2d12f2bf517f8c2958c549fcfa51e25f" name="a2d12f2bf517f8c2958c549fcfa51e25f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a2d12f2bf517f8c2958c549fcfa51e25f">&#9670;&#160;</a></span>RMD_Init()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RMD_Init </td>
+          <td>(</td>
+          <td class="paramtype">const char *</td>          <td class="paramname"><span class="paramname"><em>serialPort</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Initializes the RMD serial port for communication.</p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">serialPort</td><td>The name of the serial port.</td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>0 if the serial port is successfully initialized, -1 otherwise</dd></dl>
+<dl class="exception"><dt>异常</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">None</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a62b2891d3c3c8edd00795c265780779f" name="a62b2891d3c3c8edd00795c265780779f"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a62b2891d3c3c8edd00795c265780779f">&#9670;&#160;</a></span>RMD_Stop()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RMD_Stop </td>
+          <td>(</td>
+          <td class="paramname"><span class="paramname"><em></em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sends a command to stop a motor connected to a serial port.</p>
+<dl class="section return"><dt>返回</dt><dd>0 if the command was successfully sent, -1 otherwise</dd></dl>
+<dl class="exception"><dt>异常</dt><dd>
+  <table class="exception">
+    <tr><td class="paramname">None</td><td></td></tr>
+  </table>
+  </dd>
+</dl>
+
+</div>
+</div>
+<a id="a1d6c112734ebc57dc0a6b693b893885d" name="a1d6c112734ebc57dc0a6b693b893885d"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a1d6c112734ebc57dc0a6b693b893885d">&#9670;&#160;</a></span>RMD_WriteAnglePI_RAM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RMD_WriteAnglePI_RAM </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>arrPI</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sends a command to debug PI parameters</p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arrPI</td><td>a array to config target PI, [angleKp, angleKi, speedKp, speedKi, torqueKp, torqueKi] </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>0 if the command was successfully sent, -1 otherwise </dd></dl>
+
+</div>
+</div>
+<a id="a974ca1472e1bd7ae58e320725ef1d478" name="a974ca1472e1bd7ae58e320725ef1d478"></a>
+<h2 class="memtitle"><span class="permalink"><a href="#a974ca1472e1bd7ae58e320725ef1d478">&#9670;&#160;</a></span>RMD_WriteAnglePI_ROM()</h2>
+
+<div class="memitem">
+<div class="memproto">
+      <table class="memname">
+        <tr>
+          <td class="memname">int RMD_WriteAnglePI_ROM </td>
+          <td>(</td>
+          <td class="paramtype">const uint8_t *</td>          <td class="paramname"><span class="paramname"><em>arrPI</em></span></td><td>)</td>
+          <td></td>
+        </tr>
+      </table>
+</div><div class="memdoc">
+<p>Sends a command to change PI parameters</p>
+<dl class="params"><dt>参数</dt><dd>
+  <table class="params">
+    <tr><td class="paramname">arrPI</td><td>a array to config target PI, [angleKp, angleKi, speedKp, speedKi, torqueKp, torqueKi] </td></tr>
+  </table>
+  </dd>
+</dl>
+<dl class="section return"><dt>返回</dt><dd>0 if the command was successfully sent, -1 otherwise </dd></dl>
+
+</div>
+</div>
+</div><!-- contents -->
+<!-- start footer part -->
+<hr class="footer"/><address class="footer"><small>
+制作者&#160;<a href="https://www.doxygen.org/index.html"><img class="footer" src="doxygen.svg" width="104" height="31" alt="doxygen"/></a> 1.12.0
+</small></address>
+</div><!-- doc-content -->
+</body>
+</html>

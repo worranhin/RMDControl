@@ -23,18 +23,15 @@ DWORD bytesRead, bytesWritten;
  *
  * @throws None
  */
-int RMD_Init(const char *serialPort)
-{
+int RMD_Init(const char *serialPort) {
   hSerial = CreateFile(serialPort, GENERIC_READ | GENERIC_WRITE, 0, 0,
                        OPEN_EXISTING, 0, 0);
-  if (hSerial == INVALID_HANDLE_VALUE)
-  {
+  if (hSerial == INVALID_HANDLE_VALUE) {
     return -1;
   }
 
-  WINBOOL bSuccess = SetupComm(hSerial, 100, 100);
-  if (!bSuccess)
-  {
+  bool bSuccess = SetupComm(hSerial, 100, 100);
+  if (!bSuccess) {
     CloseHandle(hSerial);
     return -1;
   }
@@ -47,16 +44,14 @@ int RMD_Init(const char *serialPort)
   commTimeouts.WriteTotalTimeoutMultiplier = 10; // 写入超时乘数
 
   bSuccess = SetCommTimeouts(hSerial, &commTimeouts);
-  if (!bSuccess)
-  {
+  if (!bSuccess) {
     CloseHandle(hSerial);
     return -1;
   }
 
   DCB dcbSerialParams = {0};
   dcbSerialParams.DCBlength = sizeof(dcbSerialParams);
-  if (!GetCommState(hSerial, &dcbSerialParams))
-  {
+  if (!GetCommState(hSerial, &dcbSerialParams)) {
     CloseHandle(hSerial);
     return -1;
   }
@@ -64,8 +59,7 @@ int RMD_Init(const char *serialPort)
   dcbSerialParams.ByteSize = 8;
   dcbSerialParams.StopBits = ONESTOPBIT;
   dcbSerialParams.Parity = NOPARITY;
-  if (!SetCommState(hSerial, &dcbSerialParams))
-  {
+  if (!SetCommState(hSerial, &dcbSerialParams)) {
     CloseHandle(hSerial);
     return -1;
   }
@@ -80,14 +74,12 @@ int RMD_Init(const char *serialPort)
  *
  * @throws None
  */
-int RMD_DeInit()
-{
+int RMD_DeInit() {
   CloseHandle(hSerial);
   return 0;
 }
 
-int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id)
-{
+int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id) {
   uint8_t command[] = {0x3E, 0x92, 0x00, 0x00, 0x00};
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
@@ -95,37 +87,31 @@ int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id)
   uint8_t readBuf[bytesToRead];
   int64_t motorAngle = 0;
 
-  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL))
-  {
+  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
     return -1;
   }
 
-  if (!ReadFile(hSerial, readBuf, bytesToRead, &bytesRead, NULL))
-  {
+  if (!ReadFile(hSerial, readBuf, bytesToRead, &bytesRead, NULL)) {
     return -1;
   }
 
   // check received length
-  if (bytesRead != bytesToRead)
-  {
+  if (bytesRead != bytesToRead) {
     return -1;
   }
 
   // check received format
   if (readBuf[0] != 0x3E || readBuf[1] != 0x92 || readBuf[2] != id ||
-      readBuf[3] != 0x08 || readBuf[4] != (0x3E + 0x92 + id + 0x08))
-  {
+      readBuf[3] != 0x08 || readBuf[4] != (0x3E + 0x92 + id + 0x08)) {
     return -1;
   }
 
   // check data sum
   uint8_t sum = 0;
-  for (int i = 5; i < 13; i++)
-  {
+  for (int i = 5; i < 13; i++) {
     sum += readBuf[i];
   }
-  if (sum != readBuf[13])
-  {
+  if (sum != readBuf[13]) {
     return -1;
   }
 
@@ -153,8 +139,7 @@ int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id)
  *
  * @throws None
  */
-int RMD_GoToAngle(int64_t angle, const uint8_t id)
-{
+int RMD_GoToAngle(int64_t angle, const uint8_t id) {
   int64_t angleControl = angle;
   uint8_t checksum = 0;
 
@@ -173,8 +158,7 @@ int RMD_GoToAngle(int64_t angle, const uint8_t id)
   command[11] = *((uint8_t *)(&angleControl) + 6);
   command[12] = *((uint8_t *)(&angleControl) + 7);
 
-  for (int i = 5; i < 13; i++)
-  {
+  for (int i = 5; i < 13; i++) {
     checksum += command[i];
   }
   command[13] = checksum;
@@ -184,8 +168,7 @@ int RMD_GoToAngle(int64_t angle, const uint8_t id)
   //   printf("%02X ", command[i]);
   // }
 
-  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL))
-  {
+  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
     return -1;
   }
   return 0;
@@ -198,15 +181,13 @@ int RMD_GoToAngle(int64_t angle, const uint8_t id)
  *
  * @throws None
  */
-int RMD_Stop(const uint8_t id)
-{
+int RMD_Stop(const uint8_t id) {
   uint8_t command[] = {0x3E, 0x81, 0x00, 0x00, 0x00};
 
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
 
-  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL))
-  {
+  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
     return -1;
   }
 
@@ -216,50 +197,43 @@ int RMD_Stop(const uint8_t id)
 /**
  * Sends a command to get motor's PI parameters
  *
- * @param arrPI a array to obtain motor's PI, [angleKp, angleKi, speedKp, speedKi, torqueKp, torqueKi]
+ * @param arrPI a array to obtain motor's PI, [angleKp, angleKi, speedKp,
+ * speedKi, torqueKp, torqueKi]
  * @return 0 if the command was successfully sent, -1 otherwise
  */
-int RMD_GetPI(uint8_t *arrPI, const uint8_t id)
-{
+int RMD_GetPI(uint8_t *arrPI, const uint8_t id) {
   uint8_t command[] = {0x3E, 0X30, 0x00, 0x00, 0x00};
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
   DWORD bytesToRead = 12;
   uint8_t readBuf[bytesToRead];
 
-  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL))
-  {
+  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
     return -1;
   }
 
-  if (!ReadFile(hSerial, readBuf, bytesToRead, &bytesRead, NULL))
-  {
+  if (!ReadFile(hSerial, readBuf, bytesToRead, &bytesRead, NULL)) {
     return -1;
   }
 
-  if (bytesRead != bytesToRead)
-  {
+  if (bytesRead != bytesToRead) {
     return -1;
   }
 
   if (readBuf[0] != 0x3E || readBuf[1] != 0x30 || readBuf[2] != id ||
-      readBuf[3] != 0x06 || readBuf[4] != (0x3E + 0x30 + id + 0x06))
-  {
+      readBuf[3] != 0x06 || readBuf[4] != (0x3E + 0x30 + id + 0x06)) {
     return -1;
   }
 
   uint8_t sum = 0;
-  for (int i = 5; i < 11; i++)
-  {
+  for (int i = 5; i < 11; i++) {
     sum += readBuf[i];
   }
-  if (sum != readBuf[11])
-  {
+  if (sum != readBuf[11]) {
     return -1;
   }
 
-  for (int i = 0; i < 6; i++)
-  {
+  for (int i = 0; i < 6; i++) {
     arrPI[i] = (uint8_t)readBuf[5 + i];
   }
 
@@ -269,24 +243,22 @@ int RMD_GetPI(uint8_t *arrPI, const uint8_t id)
 /**
  * Sends a command to debug PI parameters
  *
- * @param arrPI a array to config target PI, [angleKp, angleKi, speedKp, speedKi, torqueKp, torqueKi]
+ * @param arrPI a array to config target PI, [angleKp, angleKi, speedKp,
+ * speedKi, torqueKp, torqueKi]
  * @return 0 if the command was successfully sent, -1 otherwise
  */
-int RMD_WriteAnglePI_RAM(const uint8_t *arrPI, const uint8_t id)
-{
+int RMD_WriteAnglePI_RAM(const uint8_t *arrPI, const uint8_t id) {
   uint8_t command[12] = {0x3E, 0x31, 0x00, 0x06, 0x00};
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
   uint8_t checksum = 0;
-  for (int i = 0; i < 6; i++)
-  {
+  for (int i = 0; i < 6; i++) {
     command[5 + i] = (uint8_t)arrPI[i];
     checksum += command[5 + i];
   }
   command[11] = checksum;
 
-  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL))
-  {
+  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
     return -1;
   }
 
@@ -296,36 +268,32 @@ int RMD_WriteAnglePI_RAM(const uint8_t *arrPI, const uint8_t id)
 /**
  * Sends a command to change PI parameters
  *
- * @param arrPI a array to config target PI, [angleKp, angleKi, speedKp, speedKi, torqueKp, torqueKi]
+ * @param arrPI a array to config target PI, [angleKp, angleKi, speedKp,
+ * speedKi, torqueKp, torqueKi]
  * @return 0 if the command was successfully sent, -1 otherwise
  */
-int RMD_WriteAnglePI_ROM(const uint8_t *arrPI, const uint8_t id)
-{
+int RMD_WriteAnglePI_ROM(const uint8_t *arrPI, const uint8_t id) {
   uint8_t command[12] = {0x3E, 0x32, 0x00, 0x06, 0x00};
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
-  
+
   uint8_t checksum = 0;
-  for (int i = 0; i < 6; i++)
-  {
+  for (int i = 0; i < 6; i++) {
     command[5 + i] = (uint8_t)arrPI[i];
     checksum += command[5 + i];
   }
   command[11] = checksum;
 
-  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL))
-  {
+  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
     return -1;
   }
 
   return 0;
 }
 
-uint8_t RMD_GetHeaderCheckSum(uint8_t *command)
-{
+uint8_t RMD_GetHeaderCheckSum(uint8_t *command) {
   uint8_t sum = 0x00;
-  for (int i = 0; i < 4; ++i)
-  {
+  for (int i = 0; i < 4; ++i) {
     sum += command[i];
   }
   return sum;

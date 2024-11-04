@@ -1,4 +1,4 @@
-/**
+﻿/**
  * @file RMDControl.c
  * @author worranhin (worranhin@foxmail.com)
  * @brief Source file of the RMD motor control library.
@@ -30,7 +30,7 @@ int RMD_Init(const char *serialPort) {
     return -1;
   }
 
-  bool bSuccess = SetupComm(hSerial, 100, 100);
+  BOOL bSuccess = SetupComm(hSerial, 100, 100);
   if (!bSuccess) {
     CloseHandle(hSerial);
     return -1;
@@ -205,7 +205,7 @@ int RMD_GetPI(uint8_t *arrPI, const uint8_t id) {
   uint8_t command[] = {0x3E, 0X30, 0x00, 0x00, 0x00};
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
-  DWORD bytesToRead = 12;
+  const DWORD bytesToRead = 12;
   uint8_t readBuf[bytesToRead];
 
   if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {

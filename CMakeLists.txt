@@ -7,7 +7,7 @@ set(CMAKE_C_STANDARD 11)
 set(CMAKE_C_STANDARD_REQUIRED True)
 
 
-add_library(RMDControl RMDControl.c)
+add_library(RMDControl RMDControl.cpp)
 
 # # 添加一个可执行文件
 # add_executable(RMDControl_main main.c)

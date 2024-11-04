@@ -26,7 +26,7 @@ jobs:
       uses: msys2/setup-msys2@v2
       with:
         # Variant of the environment to set by default: MSYS, MINGW32, MINGW64, UCRT64, CLANG32, CLANG64 or CLANGARM64
-        msystem: UCRT64 optional, default is MINGW64
+        msystem: UCRT64 # optional, default is MINGW64
         # # Default value for MSYS2_PATH_TYPE environment variable: strict, inherit or minimal
         # path-type: # optional, default is minimal
         # # Update MSYS2 installation through pacman

@@ -22,32 +22,32 @@ jobs:
     steps:
     - uses: actions/checkout@v4
 
-    - name: Setup MSYS2
-      uses: msys2/setup-msys2@v2.24.1
-      with:
-        # Variant of the environment to set by default: MSYS, MINGW32, MINGW64, UCRT64, CLANG32, CLANG64 or CLANGARM64
-        msystem: UCRT64 # optional, default is MINGW64
-        # # Default value for MSYS2_PATH_TYPE environment variable: strict, inherit or minimal
-        # path-type: # optional, default is minimal
-        # # Update MSYS2 installation through pacman
-        # update: # optional
-        # # After installation and/or update, install additional packages through pacman
-        install: mingw-w64-ucrt-x86_64-gcc # optional
-        # # After installation and/or update, install additional packages through pacboy
-        # pacboy: # optional
-        # # Retrieve and extract base installation from upstream GitHub Releases
-        # release: # optional, default is true
-        # # Where to install MSYS2
-        # location: # optional, default is RUNNER_TEMP
-        # # What to do when run on an incompatible runner: fatal, warn
-        # platform-check-severity: # optional, default is fatal
-        # # If caching should be used
-        # cache: # optional, default is true
+    # - name: Setup MSYS2
+    #   uses: msys2/setup-msys2@v2.24.1
+    #   with:
+    #     # Variant of the environment to set by default: MSYS, MINGW32, MINGW64, UCRT64, CLANG32, CLANG64 or CLANGARM64
+    #     msystem: UCRT64 # optional, default is MINGW64
+    #     # # Default value for MSYS2_PATH_TYPE environment variable: strict, inherit or minimal
+    #     # path-type: # optional, default is minimal
+    #     # # Update MSYS2 installation through pacman
+    #     # update: # optional
+    #     # # After installation and/or update, install additional packages through pacman
+    #     install: mingw-w64-ucrt-x86_64-gcc # optional
+    #     # # After installation and/or update, install additional packages through pacboy
+    #     # pacboy: # optional
+    #     # # Retrieve and extract base installation from upstream GitHub Releases
+    #     # release: # optional, default is true
+    #     # # Where to install MSYS2
+    #     # location: # optional, default is RUNNER_TEMP
+    #     # # What to do when run on an incompatible runner: fatal, warn
+    #     # platform-check-severity: # optional, default is fatal
+    #     # # If caching should be used
+    #     # cache: # optional, default is true
 
     - name: Configure CMake
       # Configure CMake in a 'build' subdirectory. `CMAKE_BUILD_TYPE` is only required if you are using a single-configuration generator such as make.
       # See https://cmake.org/cmake/help/latest/variable/CMAKE_BUILD_TYPE.html?highlight=cmake_build_type
-      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_COMPILER='${{ steps.msys2.outputs.msys2-location }}/ucrt64/bin/gcc.exe' -DCMAKE_CXX_COMPILER='${{ steps.msys2.outputs.msys2-location }}/ucrt64/bin/g++.exe'
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DCMAKE_C_COMPILER=gcc -DCMAKE_CXX_COMPILER=g++
 
     - name: Build
       # Build your program with the given configuration

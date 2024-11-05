@@ -15,6 +15,8 @@
 #include <iostream>
 #include <thread>
 
+namespace RMD {
+
 struct PIPARAM {
   uint8_t angleKp;
   uint8_t angleKi;
@@ -28,18 +30,18 @@ enum ID_ENTRY {
   ID_01 = 0x01,
   ID_02 = 0x02,
 };
-class RMD {
- public:
-  RMD(const char* serialPort, uint8_t id);
-  RMD(HANDLE comHandle, uint8_t id);
-  ~RMD();
+class RMDMotor {
+public:
+  RMDMotor(const char *serialPort, uint8_t id);
+  RMDMotor(HANDLE comHandle, uint8_t id);
+  ~RMDMotor();
   bool Init();
   bool isInit();
   bool Reconnect();
   bool GetMultiAngle_s(int64_t* angle);
   uint8_t GetHeaderCheckSum(uint8_t* command);
-  bool GoToAngle_S(int64_t angle);
-  bool GoToAngle_R(int64_t angle);
+  bool GoAngleAbsolute(int64_t angle);
+  bool GoAngleRelative(int64_t angle);
   bool Stop();
   bool SetZero();
   bool GetPI();
@@ -49,10 +51,12 @@ class RMD {
   PIPARAM _piParam;
 
  private:
-  const char* _serialPort;
-  uint8_t _id;
-  HANDLE _handle;
-  DWORD _bytesRead;
-  DWORD _bytesWritten;
-  bool _isInit;
+   const char *_serialPort;
+   uint8_t _id;
+   HANDLE _handle;
+   DWORD _bytesRead;
+   DWORD _bytesWritten;
+   bool _isInit;
 };
+
+} // namespace RMD

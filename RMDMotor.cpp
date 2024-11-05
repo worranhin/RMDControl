@@ -2,60 +2,57 @@
  * @file RMDController.cpp
  * @author worranhin (worranhin@foxmail.com)
  * @author drawal (2581478521@qq.com)
- * @brief Implementation of RMD class
+ * @brief Implementation of RMDMotor class
  * @version 0.1
  * @date 2024-11-05
  *
  * @copyright Copyright (c) 2024
  *
  */
-#include "RMDController.h"
+#include "RMDMotor.h"
+#include "LogUtil.h"
 
-// 日志输出-----------------------------------------
-#define HIGHLIGHT_(...)                           \
-  do {                                            \
-    printf("\033[35minfo - \033[0m" __VA_ARGS__); \
-    printf("\n");                                 \
-  } while (false)
+namespace RMD {
 
-#define WARNING_(...)                             \
-  do {                                            \
-    printf("\033[33mwarn - \033[0m" __VA_ARGS__); \
-    printf("\n");                                 \
-  } while (false)
-
-#define PASS_(...)                                \
-  do {                                            \
-    printf("\033[32minfo - \033[0m" __VA_ARGS__); \
-    printf("\n");                                 \
-  } while (false)
-
-#define ERROR_(...)                               \
-  do {                                            \
-    printf("\033[31m err - \033[0m" __VA_ARGS__); \
-    printf("\n");                                 \
-  } while (false)
-
-#define INFO_(...)                 \
-  do {                             \
-    printf("info - " __VA_ARGS__); \
-    printf("\n");                  \
-  } while (false)
-
-// 构造析构------------------------------------------
-RMD::RMD(const char* serialPort, uint8_t id)
+/**
+ * Construct a RMDMotor object.
+ *
+ * @param serialPort The name of the serial port. e.g. "COM1"
+ * @param id The ID of the motor. e.g. 0x01
+ *
+ * The constructor will try to initialize the serial port and get the PI
+ * parameters of the motor. If the serial port is invalid, the constructor
+ * will print an error message and set the _isInit flag to false.
+ */
+RMDMotor::RMDMotor(const char *serialPort, uint8_t id)
     : _serialPort(serialPort), _id(id) {
   _isInit = Init();
   GetPI();
 }
-RMD::RMD(HANDLE comHandle, uint8_t id) : _handle(comHandle), _id(id) {}
-RMD::~RMD() {
-  CloseHandle(_handle);
-}
+
+/**
+ * Construct a RMDMotor object using a handle to a serial port.
+ *
+ * @param comHandle The handle of the serial port.
+ * @param id The ID of the motor. e.g. 0x01
+ *
+ * The constructor will not try to initialize the serial port. The caller
+ * should ensure that the serial port is valid and the handle is a valid
+ * handle to the serial port.
+ */
+RMDMotor::RMDMotor(HANDLE comHandle, uint8_t id)
+    : _handle(comHandle), _id(id) {}
+
+/**
+ * Destructor of RMDMotor object.
+ *
+ * The destructor will close the handle of the serial port.
+ */
+RMDMotor::~RMDMotor() { CloseHandle(_handle); }
 
 // 句柄初始化-----------------------------------------
-bool RMD::Init() {
-  _handle = CreateFile(_serialPort, GENERIC_READ | GENERIC_WRITE, 0, 0,
+bool RMDMotor::Init() {
+  _handle = CreateFileA(_serialPort, GENERIC_READ | GENERIC_WRITE, 0, 0,
                        OPEN_EXISTING, 0, 0);
   if (_handle == INVALID_HANDLE_VALUE) {
     ERROR_("Invalid serialport");
@@ -69,11 +66,11 @@ bool RMD::Init() {
   }
 
   COMMTIMEOUTS commTimeouts = {0};
-  commTimeouts.ReadIntervalTimeout = 50;          // 读取时间间隔超时
-  commTimeouts.ReadTotalTimeoutConstant = 100;    // 总读取超时
-  commTimeouts.ReadTotalTimeoutMultiplier = 10;   // 读取超时乘数
-  commTimeouts.WriteTotalTimeoutConstant = 100;   // 总写入超时
-  commTimeouts.WriteTotalTimeoutMultiplier = 10;  // 写入超时乘数
+  commTimeouts.ReadIntervalTimeout = 50;         // 读取时间间隔超时
+  commTimeouts.ReadTotalTimeoutConstant = 100;   // 总读取超时
+  commTimeouts.ReadTotalTimeoutMultiplier = 10;  // 读取超时乘数
+  commTimeouts.WriteTotalTimeoutConstant = 100;  // 总写入超时
+  commTimeouts.WriteTotalTimeoutMultiplier = 10; // 写入超时乘数
 
   bSuccess = SetCommTimeouts(_handle, &commTimeouts);
   if (!bSuccess) {
@@ -100,12 +97,10 @@ bool RMD::Init() {
 }
 
 // 是否初始化-----------------------------------------
-bool RMD::isInit() {
-  return _isInit;
-}
+bool RMDMotor::isInit() { return _isInit; }
 
 // 设备重连------------------------------------------
-bool RMD::Reconnect() {
+bool RMDMotor::Reconnect() {
   if (_handle != nullptr) {
     CloseHandle(_handle);
   }
@@ -113,7 +108,7 @@ bool RMD::Reconnect() {
 }
 
 // 获取当前角度---------------------------------------
-bool RMD::GetMultiAngle_s(int64_t* angle) {
+bool RMDMotor::GetMultiAngle_s(int64_t *angle) {
   uint8_t command[] = {0x3E, 0x92, 0x00, 0x00, 0x00};
   command[2] = _id;
   command[4] = GetHeaderCheckSum(command);
@@ -156,21 +151,21 @@ bool RMD::GetMultiAngle_s(int64_t* angle) {
 
   // motorAngle = readBuf[5] | (readBuf[6] << 8) | (readBuf[7] << 16) |
   // (readBuf[8] << 24);
-  *(uint8_t*)(&motorAngle) = readBuf[5];
-  *((uint8_t*)(&motorAngle) + 1) = readBuf[6];
-  *((uint8_t*)(&motorAngle) + 2) = readBuf[7];
-  *((uint8_t*)(&motorAngle) + 3) = readBuf[8];
-  *((uint8_t*)(&motorAngle) + 4) = readBuf[9];
-  *((uint8_t*)(&motorAngle) + 5) = readBuf[10];
-  *((uint8_t*)(&motorAngle) + 6) = readBuf[11];
-  *((uint8_t*)(&motorAngle) + 7) = readBuf[12];
+  *(uint8_t *)(&motorAngle) = readBuf[5];
+  *((uint8_t *)(&motorAngle) + 1) = readBuf[6];
+  *((uint8_t *)(&motorAngle) + 2) = readBuf[7];
+  *((uint8_t *)(&motorAngle) + 3) = readBuf[8];
+  *((uint8_t *)(&motorAngle) + 4) = readBuf[9];
+  *((uint8_t *)(&motorAngle) + 5) = readBuf[10];
+  *((uint8_t *)(&motorAngle) + 6) = readBuf[11];
+  *((uint8_t *)(&motorAngle) + 7) = readBuf[12];
 
   *angle = motorAngle;
   return true;
 }
 
 // 帧头计算------------------------------------------
-uint8_t RMD::GetHeaderCheckSum(uint8_t* command) {
+uint8_t RMDMotor::GetHeaderCheckSum(uint8_t *command) {
   uint8_t sum = 0x00;
   for (int i = 0; i < 4; ++i) {
     sum += command[i];
@@ -179,7 +174,7 @@ uint8_t RMD::GetHeaderCheckSum(uint8_t* command) {
 }
 
 // 旋转角度-绝对---------------------------------------
-bool RMD::GoToAngle_S(int64_t angle) {
+bool RMDMotor::GoAngleAbsolute(int64_t angle) {
   int64_t angleControl = angle;
   uint8_t checksum = 0;
 
@@ -189,14 +184,14 @@ bool RMD::GoToAngle_S(int64_t angle) {
   command[2] = _id;
   command[4] = GetHeaderCheckSum(command);
 
-  command[5] = *(uint8_t*)(&angleControl);
-  command[6] = *((uint8_t*)(&angleControl) + 1);
-  command[7] = *((uint8_t*)(&angleControl) + 2);
-  command[8] = *((uint8_t*)(&angleControl) + 3);
-  command[9] = *((uint8_t*)(&angleControl) + 4);
-  command[10] = *((uint8_t*)(&angleControl) + 5);
-  command[11] = *((uint8_t*)(&angleControl) + 6);
-  command[12] = *((uint8_t*)(&angleControl) + 7);
+  command[5] = *(uint8_t *)(&angleControl);
+  command[6] = *((uint8_t *)(&angleControl) + 1);
+  command[7] = *((uint8_t *)(&angleControl) + 2);
+  command[8] = *((uint8_t *)(&angleControl) + 3);
+  command[9] = *((uint8_t *)(&angleControl) + 4);
+  command[10] = *((uint8_t *)(&angleControl) + 5);
+  command[11] = *((uint8_t *)(&angleControl) + 6);
+  command[12] = *((uint8_t *)(&angleControl) + 7);
 
   for (int i = 5; i < 13; i++) {
     checksum += command[i];
@@ -211,7 +206,7 @@ bool RMD::GoToAngle_S(int64_t angle) {
 }
 
 // 旋转角度-相对--------------------------------------
-bool RMD::GoToAngle_R(int64_t angle) {
+bool RMDMotor::GoAngleRelative(int64_t angle) {
   int64_t deltaAngle = angle;
   uint8_t checksum = 0;
 
@@ -219,10 +214,10 @@ bool RMD::GoToAngle_R(int64_t angle) {
   command[2] = _id;
   command[4] = GetHeaderCheckSum(command);
 
-  command[5] = *(uint8_t*)(&deltaAngle);
-  command[6] = *((uint8_t*)(&deltaAngle) + 1);
-  command[7] = *((uint8_t*)(&deltaAngle) + 2);
-  command[8] = *((uint8_t*)(&deltaAngle) + 3);
+  command[5] = *(uint8_t *)(&deltaAngle);
+  command[6] = *((uint8_t *)(&deltaAngle) + 1);
+  command[7] = *((uint8_t *)(&deltaAngle) + 2);
+  command[8] = *((uint8_t *)(&deltaAngle) + 3);
 
   for (int i = 5; i < 9; i++) {
     checksum += command[i];
@@ -237,7 +232,7 @@ bool RMD::GoToAngle_R(int64_t angle) {
 }
 
 // 急停----------------------------------------------
-bool RMD::Stop() {
+bool RMDMotor::Stop() {
   uint8_t command[] = {0x3E, 0x81, 0x00, 0x00, 0x00};
   command[2] = _id;
   command[4] = GetHeaderCheckSum(command);
@@ -250,7 +245,7 @@ bool RMD::Stop() {
 
 // 将当前位置设置为电机零点-----------------------------
 // 注意：该方法需要重新上电才能生效，且不建议频繁使用，会损害电机寿命。
-bool RMD::SetZero() {
+bool RMDMotor::SetZero() {
   uint8_t command[] = {0x3E, 0x19, 0x00, 0x00, 0x00};
   command[2] = _id;
   command[4] = GetHeaderCheckSum(command);
@@ -262,7 +257,7 @@ bool RMD::SetZero() {
 }
 
 // 获取PI参数-----------------------------------------
-bool RMD::GetPI() {
+bool RMDMotor::GetPI() {
   uint8_t command[] = {0x3E, 0X30, 0x00, 0x00, 0x00};
   command[2] = _id;
   command[4] = GetHeaderCheckSum(command);
@@ -310,7 +305,7 @@ bool RMD::GetPI() {
 }
 
 // 改写PI参数----------------------------------------
-bool RMD::WriteAnglePI(const uint8_t* arrPI) {
+bool RMDMotor::WriteAnglePI(const uint8_t *arrPI) {
   uint8_t command[12] = {0x3E, 0x32, 0x00, 0x06, 0x00};
   command[2] = _id;
   command[4] = GetHeaderCheckSum(command);
@@ -333,7 +328,7 @@ bool RMD::WriteAnglePI(const uint8_t* arrPI) {
 }
 
 // 调试PI参数-------------------------------------------
-bool RMD::DebugAnglePI(const uint8_t* arrPI) {
+bool RMDMotor::DebugAnglePI(const uint8_t *arrPI) {
   uint8_t command[12] = {0x3E, 0x31, 0x00, 0x06, 0x00};
   command[2] = _id;
   command[4] = GetHeaderCheckSum(command);
@@ -353,3 +348,5 @@ bool RMD::DebugAnglePI(const uint8_t* arrPI) {
   }
   return true;
 }
+
+} // namespace RMD

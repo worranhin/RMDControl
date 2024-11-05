@@ -10,8 +10,11 @@ set(CMAKE_CXX_STANDARD_REQUIRED True)
 
 
 add_library(RMDControl RMDControl.cpp)
-add_library(RMDController RMDController.cpp)
+add_library(RMDMotor RMDMotor.cpp)
+add_library(SerialPort SerialPort.cpp)
 
 # 添加一个可执行文件
-# add_executable(RMDControl_main main.c)
-# target_link_libraries(RMDControl_main RMDControl)
+add_executable(RMDControl_main main.cpp)
+target_link_libraries(RMDControl_main RMDControl)
+target_link_libraries(RMDControl_main RMDMotor)
+target_link_libraries(RMDControl_main SerialPort)

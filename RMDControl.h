@@ -23,7 +23,6 @@
 extern "C" {
 #endif
 
-
 int RMD_Init(const char *serialPort);
 int RMD_DeInit();
 int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id);

@@ -111,6 +111,7 @@ int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id) {
   for (int i = 5; i < 13; i++) {
     sum += readBuf[i];
   }
+
   if (sum != readBuf[13]) {
     return -1;
   }
@@ -139,7 +140,7 @@ int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id) {
  *
  * @throws None
  */
-int RMD_GoToAngle(int64_t angle, const uint8_t id) {
+int RMD_GoAngleAbsolute(int64_t angle, const uint8_t id) {
   int64_t angleControl = angle;
   uint8_t checksum = 0;
 
@@ -167,6 +168,40 @@ int RMD_GoToAngle(int64_t angle, const uint8_t id) {
   // for (int i = 0; i < 14; i++) {
   //   printf("%02X ", command[i]);
   // }
+
+  if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
+    return -1;
+  }
+  return 0;
+}
+
+/**
+ * Move the motor by a relative angle.
+ *
+ * The function constructs a command packet to instruct the motor to move
+ * by the specified relative angle. The command is sent over an initialized
+ * serial communication channel.
+ *
+ * @param angle The relative angle to move the motor, in 0.01 degrees.
+ *
+ * @return 0 if the command was successfully sent, -1 otherwise.
+ *
+ * @throws None.
+ */
+int RMD_GoAngleRelative(int32_t angle) {
+  int32_t deltaAngle = angle;
+  uint8_t checksum = 0;
+
+  static uint8_t command[10] = {0x3E, 0xA7, 0x01, 0x04, 0xEA, 0x00};
+  command[5] = *(uint8_t *)(&deltaAngle);
+  command[6] = *((uint8_t *)(&deltaAngle) + 1);
+  command[7] = *((uint8_t *)(&deltaAngle) + 2);
+  command[8] = *((uint8_t *)(&deltaAngle) + 3);
+
+  for (int i = 5; i < 9; i++) {
+    checksum += command[i];
+  }
+  command[9] = checksum;
 
   if (!WriteFile(hSerial, command, sizeof(command), &bytesWritten, NULL)) {
     return -1;

@@ -27,7 +27,8 @@ extern "C" {
 int RMD_Init(const char *serialPort);
 int RMD_DeInit();
 int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id);
-int RMD_GoToAngle(int64_t angle, const uint8_t id);
+int RMD_GoAngleAbsolute(int64_t angle, const uint8_t id);
+int RMD_GoAngleRelative(int32_t angle);
 int RMD_Stop(const uint8_t id);
 int RMD_GetPI(uint8_t *arrPI, const uint8_t id);
 int RMD_WriteAnglePI_ROM(const uint8_t *arrPI, const uint8_t id);

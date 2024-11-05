@@ -1,43 +1,39 @@
-#include "RMD.h"
+#include "RMDController.h"
 
 // 日志输出-----------------------------------------
-#define HIGHLIGHT_(...)                           \
-  do {                                            \
-    printf("\033[35minfo - \033[0m" __VA_ARGS__); \
-    printf("\n");                                 \
+#define HIGHLIGHT_(...)                                                        \
+  do {                                                                         \
+    printf("\033[35minfo - \033[0m" __VA_ARGS__);                              \
+    printf("\n");                                                              \
   } while (false)
 
-#define WARNING_(...)                             \
-  do {                                            \
-    printf("\033[33mwarn - \033[0m" __VA_ARGS__); \
-    printf("\n");                                 \
+#define WARNING_(...)                                                          \
+  do {                                                                         \
+    printf("\033[33mwarn - \033[0m" __VA_ARGS__);                              \
+    printf("\n");                                                              \
   } while (false)
 
-#define PASS_(...)                                \
-  do {                                            \
-    printf("\033[32minfo - \033[0m" __VA_ARGS__); \
-    printf("\n");                                 \
+#define PASS_(...)                                                             \
+  do {                                                                         \
+    printf("\033[32minfo - \033[0m" __VA_ARGS__);                              \
+    printf("\n");                                                              \
   } while (false)
 
-#define ERROR_(...)                               \
-  do {                                            \
-    printf("\033[31m err - \033[0m" __VA_ARGS__); \
-    printf("\n");                                 \
+#define ERROR_(...)                                                            \
+  do {                                                                         \
+    printf("\033[31m err - \033[0m" __VA_ARGS__);                              \
+    printf("\n");                                                              \
   } while (false)
 
-#define INFO_(...)                 \
-  do {                             \
-    printf("info - " __VA_ARGS__); \
-    printf("\n");                  \
+#define INFO_(...)                                                             \
+  do {                                                                         \
+    printf("info - " __VA_ARGS__);                                             \
+    printf("\n");                                                              \
   } while (false)
 
 // 构造析构------------------------------------------
-RMD::RMD(const char* serialPort) : _serialPort(serialPort) {
-  _isInit = Init();
-}
-RMD::~RMD() {
-  CloseHandle(_handle);
-}
+RMD::RMD(const char *serialPort) : _serialPort(serialPort) { _isInit = Init(); }
+RMD::~RMD() { CloseHandle(_handle); }
 
 // 句柄初始化-----------------------------------------
 bool RMD::Init() {
@@ -55,11 +51,11 @@ bool RMD::Init() {
   }
 
   COMMTIMEOUTS commTimeouts = {0};
-  commTimeouts.ReadIntervalTimeout = 50;          // 读取时间间隔超时
-  commTimeouts.ReadTotalTimeoutConstant = 100;    // 总读取超时
-  commTimeouts.ReadTotalTimeoutMultiplier = 10;   // 读取超时乘数
-  commTimeouts.WriteTotalTimeoutConstant = 100;   // 总写入超时
-  commTimeouts.WriteTotalTimeoutMultiplier = 10;  // 写入超时乘数
+  commTimeouts.ReadIntervalTimeout = 50;         // 读取时间间隔超时
+  commTimeouts.ReadTotalTimeoutConstant = 100;   // 总读取超时
+  commTimeouts.ReadTotalTimeoutMultiplier = 10;  // 读取超时乘数
+  commTimeouts.WriteTotalTimeoutConstant = 100;  // 总写入超时
+  commTimeouts.WriteTotalTimeoutMultiplier = 10; // 写入超时乘数
 
   bSuccess = SetCommTimeouts(_handle, &commTimeouts);
   if (!bSuccess) {
@@ -86,9 +82,7 @@ bool RMD::Init() {
 }
 
 // 是否初始化-----------------------------------------
-bool RMD::isInit() {
-  return _isInit;
-}
+bool RMD::isInit() { return _isInit; }
 
 // 设备重连------------------------------------------
 bool RMD::Reconnect() {
@@ -99,7 +93,7 @@ bool RMD::Reconnect() {
 }
 
 // 获取当前角度---------------------------------------
-bool RMD::GetMultiAngle_s(int64_t* angle, const uint8_t id) {
+bool RMD::GetMultiAngle_s(int64_t *angle, const uint8_t id) {
   uint8_t command[] = {0x3E, 0x92, 0x00, 0x00, 0x00};
   command[2] = id;
   command[4] = GetHeaderCheckSum(command);
@@ -142,21 +136,21 @@ bool RMD::GetMultiAngle_s(int64_t* angle, const uint8_t id) {
 
   // motorAngle = readBuf[5] | (readBuf[6] << 8) | (readBuf[7] << 16) |
   // (readBuf[8] << 24);
-  *(uint8_t*)(&motorAngle) = readBuf[5];
-  *((uint8_t*)(&motorAngle) + 1) = readBuf[6];
-  *((uint8_t*)(&motorAngle) + 2) = readBuf[7];
-  *((uint8_t*)(&motorAngle) + 3) = readBuf[8];
-  *((uint8_t*)(&motorAngle) + 4) = readBuf[9];
-  *((uint8_t*)(&motorAngle) + 5) = readBuf[10];
-  *((uint8_t*)(&motorAngle) + 6) = readBuf[11];
-  *((uint8_t*)(&motorAngle) + 7) = readBuf[12];
+  *(uint8_t *)(&motorAngle) = readBuf[5];
+  *((uint8_t *)(&motorAngle) + 1) = readBuf[6];
+  *((uint8_t *)(&motorAngle) + 2) = readBuf[7];
+  *((uint8_t *)(&motorAngle) + 3) = readBuf[8];
+  *((uint8_t *)(&motorAngle) + 4) = readBuf[9];
+  *((uint8_t *)(&motorAngle) + 5) = readBuf[10];
+  *((uint8_t *)(&motorAngle) + 6) = readBuf[11];
+  *((uint8_t *)(&motorAngle) + 7) = readBuf[12];
 
   *angle = motorAngle;
   return true;
 }
 
 // 帧头计算------------------------------------------
-uint8_t RMD::GetHeaderCheckSum(uint8_t* command) {
+uint8_t RMD::GetHeaderCheckSum(uint8_t *command) {
   uint8_t sum = 0x00;
   for (int i = 0; i < 4; ++i) {
     sum += command[i];
@@ -175,14 +169,14 @@ bool RMD::GoToAngle(int64_t angle, const uint8_t id) {
   command[2] = id;
   command[4] = GetHeaderCheckSum(command);
 
-  command[5] = *(uint8_t*)(&angleControl);
-  command[6] = *((uint8_t*)(&angleControl) + 1);
-  command[7] = *((uint8_t*)(&angleControl) + 2);
-  command[8] = *((uint8_t*)(&angleControl) + 3);
-  command[9] = *((uint8_t*)(&angleControl) + 4);
-  command[10] = *((uint8_t*)(&angleControl) + 5);
-  command[11] = *((uint8_t*)(&angleControl) + 6);
-  command[12] = *((uint8_t*)(&angleControl) + 7);
+  command[5] = *(uint8_t *)(&angleControl);
+  command[6] = *((uint8_t *)(&angleControl) + 1);
+  command[7] = *((uint8_t *)(&angleControl) + 2);
+  command[8] = *((uint8_t *)(&angleControl) + 3);
+  command[9] = *((uint8_t *)(&angleControl) + 4);
+  command[10] = *((uint8_t *)(&angleControl) + 5);
+  command[11] = *((uint8_t *)(&angleControl) + 6);
+  command[12] = *((uint8_t *)(&angleControl) + 7);
 
   for (int i = 5; i < 13; i++) {
     checksum += command[i];
@@ -196,7 +190,7 @@ bool RMD::GoToAngle(int64_t angle, const uint8_t id) {
   return true;
 }
 
-//急停----------------------------------------------
+// 急停----------------------------------------------
 bool RMD::Stop(const uint8_t id) {
   uint8_t command[] = {0x3E, 0x81, 0x00, 0x00, 0x00};
   command[2] = id;
@@ -208,8 +202,8 @@ bool RMD::Stop(const uint8_t id) {
   return true;
 }
 
-//获取PI参数-----------------------------------------
-bool RMD::GetPI(uint8_t* arrPI, const uint8_t id) {
+// 获取PI参数-----------------------------------------
+bool RMD::GetPI(uint8_t *arrPI, const uint8_t id) {
   uint8_t command[] = {0x3E, 0X30, 0x00, 0x00, 0x00};
   command[2] = id;
   command[4] = GetHeaderCheckSum(command);
@@ -254,7 +248,7 @@ bool RMD::GetPI(uint8_t* arrPI, const uint8_t id) {
 }
 
 // 改写PI参数----------------------------------------
-bool RMD::WriteAnglePI(const uint8_t* arrPI, const uint8_t id) {
+bool RMD::WriteAnglePI(const uint8_t *arrPI, const uint8_t id) {
   uint8_t command[12] = {0x3E, 0x32, 0x00, 0x06, 0x00};
   command[2] = id;
   command[4] = GetHeaderCheckSum(command);
@@ -274,8 +268,8 @@ bool RMD::WriteAnglePI(const uint8_t* arrPI, const uint8_t id) {
   return true;
 }
 
-//调试PI参数-------------------------------------------
-bool RMD::DebugAnglePI(const uint8_t* arrPI, const uint8_t id){
+// 调试PI参数-------------------------------------------
+bool RMD::DebugAnglePI(const uint8_t *arrPI, const uint8_t id) {
   uint8_t command[12] = {0x3E, 0x31, 0x00, 0x06, 0x00};
   command[2] = id;
   command[4] = GetHeaderCheckSum(command);

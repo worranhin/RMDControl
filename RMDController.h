@@ -26,7 +26,7 @@ class RMD {
   bool _isInit;
 };
 
-typedef enum ID_ENTRY {
+enum ID_ENTRY {
     ID_01 = 0x01,
     ID_02 = 0x02,
 };

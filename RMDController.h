@@ -1,33 +1,58 @@
+/**
+ * @file RMDController.h
+ * @author worranhin (worranhin@foxmail.com)
+ * @author drawal (2581478521@qq.com)
+ * @brief RMD motor class
+ * @version 0.1
+ * @date 2024-11-05
+ *
+ * @copyright Copyright (c) 2024
+ *
+ */
 #pragma once
 #include <Windows.h>
 #include <cstdint>
 #include <iostream>
+#include <thread>
 
+struct PIPARAM {
+  uint8_t angleKp;
+  uint8_t angleKi;
+  uint8_t speedKp;
+  uint8_t speedKi;
+  uint8_t torqueKp;
+  uint8_t torqueKi;
+};
+
+enum ID_ENTRY {
+  ID_01 = 0x01,
+  ID_02 = 0x02,
+};
 class RMD {
  public:
-  RMD(const char* serialPort);
+  RMD(const char* serialPort, uint8_t id);
+  RMD(HANDLE comHandle, uint8_t id);
   ~RMD();
   bool Init();
   bool isInit();
   bool Reconnect();
-  bool GetMultiAngle_s(int64_t* angle, const uint8_t id);
+  bool GetMultiAngle_s(int64_t* angle);
   uint8_t GetHeaderCheckSum(uint8_t* command);
-  bool GoToAngle(int64_t angle, const uint8_t id);
-  bool Stop(const uint8_t id);
-  bool GetPI(uint8_t* arrPI, const uint8_t id);
-  bool WriteAnglePI(const uint8_t* arrPI, const uint8_t id);
-  bool DebugAnglePI(const uint8_t* arrPI, const uint8_t id);
+  bool GoToAngle_S(int64_t angle);
+  bool GoToAngle_R(int64_t angle);
+  bool Stop();
+  bool SetZero();
+  bool GetPI();
+  bool WriteAnglePI(const uint8_t* arrPI);
+  bool DebugAnglePI(const uint8_t* arrPI);
+
+  PIPARAM _piParam;
 
  private:
   const char* _serialPort;
+  uint8_t _id;
   HANDLE _handle;
   DWORD _bytesRead;
   DWORD _bytesWritten;
   bool _isInit;
 };
-
-enum ID_ENTRY {
-    ID_01 = 0x01,
-    ID_02 = 0x02,
-};
-

@@ -21,7 +21,7 @@ target_link_libraries(RMDControl_main SerialPort)
 
 # add_executable(RMDControl_main main.c)
 # target_link_libraries(RMDControl_main RMDControl)
-add_executable(RMDControl_test test.c)
-target_link_libraries(RMDControl_test RMDControl)
+# add_executable(RMDControl_test test.c)
+# target_link_libraries(RMDControl_test RMDControl)
 
 # add_library(RMD RMD.cpp)

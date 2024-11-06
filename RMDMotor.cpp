@@ -29,6 +29,9 @@ RMDMotor::RMDMotor(const char *serialPort, uint8_t id)
     : _serialPort(serialPort), _id(id) {
   _isInit = Init();
   GetPI();
+  if (!_isInit) {
+    ERROR_("Fail to init RMDMotor");
+  }
 }
 
 /**
@@ -42,7 +45,10 @@ RMDMotor::RMDMotor(const char *serialPort, uint8_t id)
  * handle to the serial port.
  */
 RMDMotor::RMDMotor(HANDLE comHandle, uint8_t id)
-    : _handle(comHandle), _id(id) {}
+    : _handle(comHandle), _id(id) {
+      GetPI();
+      _isInit = true;
+    }
 
 /**
  * Destructor of RMDMotor object.

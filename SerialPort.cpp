@@ -1,12 +1,12 @@
 #include "SerialPort.h"
+#include <stdexcept>
 
 namespace D5R {
 SerialPort::SerialPort(const char *serialPort) {
   _handle = CreateFile(serialPort, GENERIC_READ | GENERIC_WRITE, 0, 0,
                        OPEN_EXISTING, 0, 0);
   if (_handle == INVALID_HANDLE_VALUE) {
-    // ERROR_("Invalid serialport");
-    throw "Invalid serialport";
+    throw std::runtime_error(std::string("Failed to open serial port"));
   }
 
   BOOL bSuccess = SetupComm(_handle, 100, 100);

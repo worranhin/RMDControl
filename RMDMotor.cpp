@@ -12,7 +12,7 @@
 #include "RMDMotor.h"
 #include "LogUtil.h"
 
-namespace RMD {
+namespace D5R {
 
 /**
  * Construct a RMDMotor object.
@@ -20,6 +20,7 @@ namespace RMD {
  * @param serialPort The name of the serial port. e.g. "COM1"
  * @param id The ID of the motor. e.g. 0x01
  *
+ * !! Deprecate !!
  * The constructor will try to initialize the serial port and get the PI
  * parameters of the motor. If the serial port is invalid, the constructor
  * will print an error message and set the _isInit flag to false.
@@ -53,7 +54,7 @@ RMDMotor::~RMDMotor() { CloseHandle(_handle); }
 // 句柄初始化-----------------------------------------
 bool RMDMotor::Init() {
   _handle = CreateFileA(_serialPort, GENERIC_READ | GENERIC_WRITE, 0, 0,
-                       OPEN_EXISTING, 0, 0);
+                        OPEN_EXISTING, 0, 0);
   if (_handle == INVALID_HANDLE_VALUE) {
     ERROR_("Invalid serialport");
     return false;
@@ -349,4 +350,4 @@ bool RMDMotor::DebugAnglePI(const uint8_t *arrPI) {
   return true;
 }
 
-} // namespace RMD
+} // namespace D5R

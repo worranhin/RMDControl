@@ -9,7 +9,7 @@
 
 void TestSerialPort() {
   try {
-    RMD::SerialPort sp("COM3");
+    D5R::SerialPort sp("COM3");
     std::cout << "SerialPort: " << sp.GetHandle() << std::endl;
   } catch (const std::exception &e) {
     std::cerr << e.what() << '\n';
@@ -17,9 +17,9 @@ void TestSerialPort() {
 }
 
 int main() {
-  RMD::SerialPort port("COM3");
-  RMD::RMDMotor motor(port.GetHandle(), 0x01);
-  RMD::RMDMotor motor2(port.GetHandle(), 0x02);
+  D5R::SerialPort port("COM3");
+  D5R::RMDMotor motor(port.GetHandle(), 0x01);
+  D5R::RMDMotor motor2(port.GetHandle(), 0x02);
 
   return 0;
 }

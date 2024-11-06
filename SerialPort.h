@@ -1,7 +1,7 @@
 #pragma once
 #include <windows.h>
 
-namespace RMD {
+namespace D5R {
 class SerialPort {
 public:
   SerialPort(const char *serialPort);
@@ -12,4 +12,4 @@ private:
   HANDLE _handle;
 };
 
-} // namespace RMD
+} // namespace D5R

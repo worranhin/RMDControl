@@ -1,6 +1,6 @@
 #include "SerialPort.h"
 
-namespace RMD {
+namespace D5R {
 SerialPort::SerialPort(const char *serialPort) {
   _handle = CreateFile(serialPort, GENERIC_READ | GENERIC_WRITE, 0, 0,
                        OPEN_EXISTING, 0, 0);
@@ -48,4 +48,4 @@ SerialPort::~SerialPort() { CloseHandle(_handle); }
 
 HANDLE SerialPort::GetHandle() { return _handle; }
 
-} // namespace RMD
+} // namespace D5R

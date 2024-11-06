@@ -1,9 +1,10 @@
 ﻿/**
- * @file RMDControl.c
+ * @file RMDControl.cpp
  * @author worranhin (worranhin@foxmail.com)
+ * @author drawal
  * @brief Source file of the RMD motor control library.
- * @version 0.1
- * @date 2024-07-26
+ * @version 0.2
+ * @date 2024-11-5
  *
  * @copyright Copyright (c) 2024
  *
@@ -23,7 +24,7 @@ DWORD bytesRead, bytesWritten;
  *
  * @throws None
  */
-int RMD_Init(const char *serialPort) {
+int RMD_Init(const char* serialPort) {
   hSerial = CreateFile(serialPort, GENERIC_READ | GENERIC_WRITE, 0, 0,
                        OPEN_EXISTING, 0, 0);
   if (hSerial == INVALID_HANDLE_VALUE) {
@@ -37,11 +38,11 @@ int RMD_Init(const char *serialPort) {
   }
 
   COMMTIMEOUTS commTimeouts = {0};
-  commTimeouts.ReadIntervalTimeout = 50;         // 读取时间间隔超时
-  commTimeouts.ReadTotalTimeoutConstant = 100;   // 总读取超时
-  commTimeouts.ReadTotalTimeoutMultiplier = 10;  // 读取超时乘数
-  commTimeouts.WriteTotalTimeoutConstant = 100;  // 总写入超时
-  commTimeouts.WriteTotalTimeoutMultiplier = 10; // 写入超时乘数
+  commTimeouts.ReadIntervalTimeout = 50;          // 读取时间间隔超时
+  commTimeouts.ReadTotalTimeoutConstant = 100;    // 总读取超时
+  commTimeouts.ReadTotalTimeoutMultiplier = 10;   // 读取超时乘数
+  commTimeouts.WriteTotalTimeoutConstant = 100;   // 总写入超时
+  commTimeouts.WriteTotalTimeoutMultiplier = 10;  // 写入超时乘数
 
   bSuccess = SetCommTimeouts(hSerial, &commTimeouts);
   if (!bSuccess) {
@@ -79,7 +80,7 @@ int RMD_DeInit() {
   return 0;
 }
 
-int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id) {
+int RMD_GetMultiAngle_S(int64_t* angle, const uint8_t id) {
   uint8_t command[] = {0x3E, 0x92, 0x00, 0x00, 0x00};
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
@@ -118,14 +119,14 @@ int RMD_GetMultiAngle_S(int64_t *angle, const uint8_t id) {
 
   // motorAngle = readBuf[5] | (readBuf[6] << 8) | (readBuf[7] << 16) |
   // (readBuf[8] << 24);
-  *(uint8_t *)(&motorAngle) = readBuf[5];
-  *((uint8_t *)(&motorAngle) + 1) = readBuf[6];
-  *((uint8_t *)(&motorAngle) + 2) = readBuf[7];
-  *((uint8_t *)(&motorAngle) + 3) = readBuf[8];
-  *((uint8_t *)(&motorAngle) + 4) = readBuf[9];
-  *((uint8_t *)(&motorAngle) + 5) = readBuf[10];
-  *((uint8_t *)(&motorAngle) + 6) = readBuf[11];
-  *((uint8_t *)(&motorAngle) + 7) = readBuf[12];
+  *(uint8_t*)(&motorAngle) = readBuf[5];
+  *((uint8_t*)(&motorAngle) + 1) = readBuf[6];
+  *((uint8_t*)(&motorAngle) + 2) = readBuf[7];
+  *((uint8_t*)(&motorAngle) + 3) = readBuf[8];
+  *((uint8_t*)(&motorAngle) + 4) = readBuf[9];
+  *((uint8_t*)(&motorAngle) + 5) = readBuf[10];
+  *((uint8_t*)(&motorAngle) + 6) = readBuf[11];
+  *((uint8_t*)(&motorAngle) + 7) = readBuf[12];
 
   *angle = motorAngle;
   return 0;
@@ -150,14 +151,14 @@ int RMD_GoAngleAbsolute(int64_t angle, const uint8_t id) {
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
 
-  command[5] = *(uint8_t *)(&angleControl);
-  command[6] = *((uint8_t *)(&angleControl) + 1);
-  command[7] = *((uint8_t *)(&angleControl) + 2);
-  command[8] = *((uint8_t *)(&angleControl) + 3);
-  command[9] = *((uint8_t *)(&angleControl) + 4);
-  command[10] = *((uint8_t *)(&angleControl) + 5);
-  command[11] = *((uint8_t *)(&angleControl) + 6);
-  command[12] = *((uint8_t *)(&angleControl) + 7);
+  command[5] = *(uint8_t*)(&angleControl);
+  command[6] = *((uint8_t*)(&angleControl) + 1);
+  command[7] = *((uint8_t*)(&angleControl) + 2);
+  command[8] = *((uint8_t*)(&angleControl) + 3);
+  command[9] = *((uint8_t*)(&angleControl) + 4);
+  command[10] = *((uint8_t*)(&angleControl) + 5);
+  command[11] = *((uint8_t*)(&angleControl) + 6);
+  command[12] = *((uint8_t*)(&angleControl) + 7);
 
   for (int i = 5; i < 13; i++) {
     checksum += command[i];
@@ -193,10 +194,10 @@ int RMD_GoAngleRelative(int32_t angle) {
   uint8_t checksum = 0;
 
   static uint8_t command[10] = {0x3E, 0xA7, 0x01, 0x04, 0xEA, 0x00};
-  command[5] = *(uint8_t *)(&deltaAngle);
-  command[6] = *((uint8_t *)(&deltaAngle) + 1);
-  command[7] = *((uint8_t *)(&deltaAngle) + 2);
-  command[8] = *((uint8_t *)(&deltaAngle) + 3);
+  command[5] = *(uint8_t*)(&deltaAngle);
+  command[6] = *((uint8_t*)(&deltaAngle) + 1);
+  command[7] = *((uint8_t*)(&deltaAngle) + 2);
+  command[8] = *((uint8_t*)(&deltaAngle) + 3);
 
   for (int i = 5; i < 9; i++) {
     checksum += command[i];
@@ -236,7 +237,7 @@ int RMD_Stop(const uint8_t id) {
  * speedKi, torqueKp, torqueKi]
  * @return 0 if the command was successfully sent, -1 otherwise
  */
-int RMD_GetPI(uint8_t *arrPI, const uint8_t id) {
+int RMD_GetPI(uint8_t* arrPI, const uint8_t id) {
   uint8_t command[] = {0x3E, 0X30, 0x00, 0x00, 0x00};
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
@@ -282,7 +283,7 @@ int RMD_GetPI(uint8_t *arrPI, const uint8_t id) {
  * speedKi, torqueKp, torqueKi]
  * @return 0 if the command was successfully sent, -1 otherwise
  */
-int RMD_WriteAnglePI_RAM(const uint8_t *arrPI, const uint8_t id) {
+int RMD_WriteAnglePI_RAM(const uint8_t* arrPI, const uint8_t id) {
   uint8_t command[12] = {0x3E, 0x31, 0x00, 0x06, 0x00};
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
@@ -307,7 +308,7 @@ int RMD_WriteAnglePI_RAM(const uint8_t *arrPI, const uint8_t id) {
  * speedKi, torqueKp, torqueKi]
  * @return 0 if the command was successfully sent, -1 otherwise
  */
-int RMD_WriteAnglePI_ROM(const uint8_t *arrPI, const uint8_t id) {
+int RMD_WriteAnglePI_ROM(const uint8_t* arrPI, const uint8_t id) {
   uint8_t command[12] = {0x3E, 0x32, 0x00, 0x06, 0x00};
   command[2] = id;
   command[4] = RMD_GetHeaderCheckSum(command);
@@ -326,7 +327,7 @@ int RMD_WriteAnglePI_ROM(const uint8_t *arrPI, const uint8_t id) {
   return 0;
 }
 
-uint8_t RMD_GetHeaderCheckSum(uint8_t *command) {
+uint8_t RMD_GetHeaderCheckSum(uint8_t* command) {
   uint8_t sum = 0x00;
   for (int i = 0; i < 4; ++i) {
     sum += command[i];
